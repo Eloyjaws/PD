@@ -1,12 +1,54 @@
-from feature_extraction import Feature_Extractor
-import visualization
+import os
+import sys
 import pandas as pd
+from pathlib import Path
+
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(os.path.dirname(SCRIPT_DIR))
+
+from FeatureExtraction.feature_extraction import Feature_Extractor   # noqa
+
 
 dataset_paths = {
     "MDVR_KCL": (r"data/dataset/ReadText/HC/*.wav", r"data/dataset/ReadText/PD/*.wav"),
+    "MDVR_KCL_split_on_silence_500ms": (r"data/synthetic/MDVR_KCL_min_silence_500ms/HC/*/*.wav", r"data/synthetic/MDVR_KCL_min_silence_500ms/PD/*/*.wav"),
+    "MDVR_KCL_split_on_silence_1000ms": (r"data/synthetic/MDVR_KCL_min_silence_1000ms/HC/*/*.wav", r"data/synthetic/MDVR_KCL_min_silence_1000ms/PD/*/*.wav"),
+    "MDVR_KCL_split_on_silence_2000ms": (r"data/synthetic/MDVR_KCL_min_silence_2000ms/HC/*/*.wav", r"data/synthetic/MDVR_KCL_min_silence_2000ms/PD/*/*.wav"),
+    "MDVR_KCL_chunk_500ms": (r"data/synthetic/MDVR_KCL_chunk_length_500ms/HC/*/*.wav", r"data/synthetic/MDVR_KCL_chunk_length_500ms/PD/*/*.wav"),
+    "MDVR_KCL_chunk_1000ms": (r"data/synthetic/MDVR_KCL_chunk_length_1000ms/HC/*/*.wav", r"data/synthetic/MDVR_KCL_chunk_length_1000ms/PD/*/*.wav"),
+    "MDVR_KCL_chunk_3000ms": (r"data/synthetic/MDVR_KCL_chunk_length_3000ms/HC/*/*.wav", r"data/synthetic/MDVR_KCL_chunk_length_3000ms/PD/*/*.wav"),
+    "MDVR_KCL_chunk_5000ms": (r"data/synthetic/MDVR_KCL_chunk_length_5000ms/HC/*/*.wav", r"data/synthetic/MDVR_KCL_chunk_length_5000ms/PD/*/*.wav"),
     "ItalianParkinsonSpeech": (
         r"data/dataset/ItalianParkinsonSpeech/EHC/*.wav",
         r"data/dataset/ItalianParkinsonSpeech/PD/*.wav",
+    ),
+    "ItalianParkinsonSpeech_split_on_silence_500ms": (
+        r"data/synthetic/ItalianParkinsonSpeech_min_silence_500ms/EHC/*/*.wav",
+        r"data/synthetic/ItalianParkinsonSpeech_min_silence_500ms/PD/*/*.wav",
+    ),
+    "ItalianParkinsonSpeech_split_on_silence_1000ms": (
+        r"data/synthetic/ItalianParkinsonSpeech_min_silence_1000ms/EHC/*/*.wav",
+        r"data/synthetic/ItalianParkinsonSpeech_min_silence_1000ms/PD/*/*.wav",
+    ),
+    "ItalianParkinsonSpeech_split_on_silence_2000ms": (
+        r"data/synthetic/ItalianParkinsonSpeech_min_silence_2000ms/EHC/*/*.wav",
+        r"data/synthetic/ItalianParkinsonSpeech_min_silence_2000ms/PD/*/*.wav",
+    ),
+    "ItalianParkinsonSpeech_chunk_500ms": (
+        r"data/synthetic/ItalianParkinsonSpeech_chunk_length_500ms/EHC/*/*.wav",
+        r"data/synthetic/ItalianParkinsonSpeech_chunk_length_500ms/PD/*/*.wav",
+    ),
+    "ItalianParkinsonSpeech_chunk_1000ms": (
+        r"data/synthetic/ItalianParkinsonSpeech_chunk_length_1000ms/EHC/*/*.wav",
+        r"data/synthetic/ItalianParkinsonSpeech_chunk_length_1000ms/PD/*/*.wav",
+    ),
+    "ItalianParkinsonSpeech_chunk_3000ms": (
+        r"data/synthetic/ItalianParkinsonSpeech_chunk_length_3000ms/EHC/*/*.wav",
+        r"data/synthetic/ItalianParkinsonSpeech_chunk_length_3000ms/PD/*/*.wav",
+    ),
+    "ItalianParkinsonSpeech_chunk_5000ms": (
+        r"data/synthetic/ItalianParkinsonSpeech_chunk_length_5000ms/EHC/*/*.wav",
+        r"data/synthetic/ItalianParkinsonSpeech_chunk_length_5000ms/PD/*/*.wav",
     ),
 }
 
@@ -24,8 +66,6 @@ def test_one(filename="data/dataset/ReadText/HC/ID00_hc_0_0_0.wav"):
     print("mfcc \n", mfcc)
 
     print(len(mfcc), len(features))
-
-    visualization.visualize_sound_sample(filename)
 
 
 def extract_acoustic_features(folder_hc, folder_pd):
@@ -62,24 +102,26 @@ def extract_mfcc_features(folder_hc, folder_pd):
 
 
 def combine_acoustic_and_mfcc_features(df_acoustic_features, df_mfcc_features):
-    ##################### Combine the both acoustic features and MFCC in a csv file##################
+    ##################### Combine the both acoustic features and MFCC values ##################
     df_acoustic_features = df_acoustic_features.drop(columns=["label"])
-    df_mfcc_features = df_mfcc_features.drop(columns=["voiceID"])
-    df_all_features = pd.concat(
-        [df_acoustic_features, df_mfcc_features], axis=1)
-    return df_all_features
+    return pd.merge(df_acoustic_features, df_mfcc_features, on="voiceID", how="inner")
 
 
-def main():
+def extract_features_from_all_datasets():
     for name, (folder_hc, folder_pd) in dataset_paths.items():
         print(f"\n===== Extracting {name} dataset =====\n")
         acoustic_features = extract_acoustic_features(folder_hc, folder_pd)
-        acoustic_features_v2 = extract_acoustic_features_v2(folder_hc, folder_pd)
+        acoustic_features_v2 = extract_acoustic_features_v2(
+            folder_hc, folder_pd)
         mfcc_features = extract_mfcc_features(folder_hc, folder_pd)
+
         combined_features = combine_acoustic_and_mfcc_features(
             acoustic_features, mfcc_features)
         combined_features_v2 = combine_acoustic_and_mfcc_features(
             acoustic_features_v2, mfcc_features)
+
+        Path(
+            f"data/extracted_features/{name}").mkdir(parents=True, exist_ok=True)
         combined_features.to_csv(
             f"data/extracted_features/{name}/All_features.csv", index=False)
         combined_features_v2.to_csv(
@@ -87,4 +129,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    extract_features_from_all_datasets()

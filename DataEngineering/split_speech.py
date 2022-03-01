@@ -1,11 +1,15 @@
 import glob
+import sys
 import os.path
 from pathlib import Path
 import pandas as pd
 from pydub import AudioSegment
 from pydub.utils import make_chunks
 from pydub.silence import split_on_silence
-from feature_extraction import Feature_Extractor
+
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(os.path.dirname(SCRIPT_DIR))
+from utils.timer import start_timer, end_timer_and_print
 
 
 class SpeechSplitter:
@@ -14,11 +18,13 @@ class SpeechSplitter:
     """
 
     @staticmethod
-    def split_on_silence(folder_path=r"data/dataset/ReadText/HC/*.wav", output_dir=r"data/dataset/MDVR/HC", min_silence_len=1000, silence_thresh=-40):
+    def split_on_silence(folder_path, output_dir, min_silence_len=1000, silence_thresh=-40):
+        start_timer()
         for filepath in glob.glob(folder_path):
             try:
                 # split to get parent_dir and filename like ID01_hc_0_0_0.wav
-                parent_dir, filename = os.path.split(filepath)
+                parent_dir, filenameWithExt = os.path.split(filepath)
+                filename, ext = os.path.splitext(filenameWithExt)
                 patientID = filename.split('_')[0]
 
                 output_file_path = os.path.join(output_dir, patientID)
@@ -39,19 +45,22 @@ class SpeechSplitter:
             except Exception as e:
                 print(e)
                 print("error while handling file: ", filepath)
+        end_timer_and_print(f"Done splitting wav files in {folder_path}", __name__)
 
     @staticmethod
-    def split_into_chunks(folder_path=r"data/dataset/ReadText/HC/*.wav", output_dir=r"data/dataset/MDVR/HC", chunk_length_ms=3000):
+    def split_into_chunks(folder_path, output_dir, chunk_length_ms=3000):
+        start_timer()
         for filepath in glob.glob(folder_path):
             try:
                 # split to get parent_dir and filename like ID01_hc_0_0_0.wav
-                parent_dir, filename = os.path.split(filepath)
+                parent_dir, filenameWithExt = os.path.split(filepath)
+                filename, ext = os.path.splitext(filenameWithExt)
                 patientID = filename.split('_')[0]
 
                 output_file_path = os.path.join(output_dir, patientID)
                 Path(output_file_path).mkdir(parents=True, exist_ok=True)
 
-                sound_file = AudioSegment.from_wav(filename)
+                sound_file = AudioSegment.from_wav(filepath)
                 audio_chunks = make_chunks(sound_file, chunk_length_ms)
 
                 for chunk_id, chunk in enumerate(audio_chunks):
@@ -61,3 +70,4 @@ class SpeechSplitter:
             except Exception as e:
                 print(e)
                 print("error while handling file: ", filepath)
+        end_timer_and_print(f"Done chunking wav files in {folder_path}", __name__)
