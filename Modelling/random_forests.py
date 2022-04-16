@@ -15,14 +15,14 @@ from Modelling.utils import Utils  # noqa
 
 class RF_Model():
     def __init__(self, params={
-        'n_estimators': [100, 200, 300],
-        'max_features': ['auto', 'sqrt', 'log2'],
-        'min_samples_split': [2, 5, 10],
-        'min_samples_leaf': [1, 2, 5, 10, 15]
+        'n_estimators': [100, 200],
+        'max_features': ['auto'],
+        'min_samples_split': [2],
+        'min_samples_leaf': [1, 2, 5]
     }):
         """
-        Constructor for SVM
-        :param params: all hyperparameter options for the constructor such as C, gamma, and kernel
+        Constructor for RF
+        :param params: all hyperparameter options for the constructor
         """
         self.clf = RandomForestClassifier(**params)
         self._params = params
