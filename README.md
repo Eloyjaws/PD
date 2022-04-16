@@ -130,6 +130,9 @@ Extracted features for all datasets are stored at data/extracted_features
     └── timer.py
 ```
 
+## Reproducibility of results
+For quick verification of results, a `Notebook for reproducibility` folder contains a notebook and some processed datasets 
+
 ## More Info
 1. To create a new experiment on mlflow
    - Set the experiment via environment variables
