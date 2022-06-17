@@ -29,7 +29,7 @@ def run_all_experiments():
             run_name = f"Model: {model_name} - Dataset: {dataset}"
             for k in [4, 12]:
                 model_instance.mlflow_run(
-                    df, K=k, run_name=run_name, verbose=False)
+                    df, K=k, run_name=run_name, verbose=True)
 
 
 if __name__ == "__main__":

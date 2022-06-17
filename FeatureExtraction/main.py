@@ -9,7 +9,11 @@ sys.path.append(os.path.dirname(SCRIPT_DIR))
 from FeatureExtraction.feature_extraction import Feature_Extractor   # noqa
 
 
+dataset_path_mpower = {
+    "mPower": (r"data/dataset/mPower/HC/*/*.wav", r"data/dataset/mPower/PD/*/*.wav")
+}
 dataset_paths = {
+    "mPower": (r"data/dataset/mPower/HC/*.wav", r"data/dataset/mPower/PD/*.wav"),
     "MDVR_KCL": (r"data/dataset/ReadText/HC/*.wav", r"data/dataset/ReadText/PD/*.wav"),
     "MDVR_KCL_split_on_silence_500ms": (r"data/synthetic/MDVR_KCL_min_silence_500ms/HC/*/*.wav", r"data/synthetic/MDVR_KCL_min_silence_500ms/PD/*/*.wav"),
     "MDVR_KCL_split_on_silence_1000ms": (r"data/synthetic/MDVR_KCL_min_silence_1000ms/HC/*/*.wav", r"data/synthetic/MDVR_KCL_min_silence_1000ms/PD/*/*.wav"),
@@ -127,6 +131,34 @@ def extract_features_from_all_datasets():
         combined_features_v2.to_csv(
             f"data/extracted_features/{name}/All_features_v2.csv", index=False)
 
+def rename_mPower_dataset_files():
+    import glob
+    from pathlib import Path
+    for old_path in glob.glob(r'data/dataset/mPower/*/*/*'):
+        parts = old_path.split('/')
+        new_path = parts[:-1]
+        new_path.append(parts[-1].split('.m4a-')[-1][:-3] + 'm4a')
+        new_path = "/".join(new_path)
+        Path(old_path).rename(new_path)
+
+def convert_mPower_dataset_from_m4a_to_wav():
+    import os, glob
+    from pydub import AudioSegment
+
+    for m4a_file in glob.glob(r'data/dataset/mPower/*/*/*.m4a'):
+        print(m4a_file)
+        wav_filename = m4a_file.replace('.m4a', '.wav')
+
+        try:
+            track = AudioSegment.from_file(m4a_file,  format= 'm4a')
+        except Exception as e:
+            print(f"Failed to load {m4a_file}\n{e}")
+
+        try:
+            file_handle = track.export(wav_filename, format='wav')
+            os.remove(m4a_file)
+        except Exception as e:
+            print(f"Failed to export {wav_filename}\n{e}")
 
 if __name__ == "__main__":
     extract_features_from_all_datasets()

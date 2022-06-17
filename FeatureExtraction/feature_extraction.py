@@ -107,6 +107,7 @@ class Feature_Extractor:
         features = []
         curr_time = datetime.now()
         print(f"Extracting MFCC from {folder_path}, time:", curr_time)
+        print(glob.glob(folder_path))
         for filename in glob.glob(folder_path):
             try:
                 mfcc_per_file = Feature_Extractor.extract_mfcc(filename)

@@ -39,6 +39,7 @@ class Utils:
     @staticmethod
     def get_dataset_names():
         datasets = [
+            "mPower",
             "MDVR_KCL",
             "ItalianParkinsonSpeech",
             "MDVR_KCL_split_on_silence_500ms",
