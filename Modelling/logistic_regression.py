@@ -19,7 +19,7 @@ class LR_Model():
         Constructor for Logistic Regression
         :param params: all hyperparameter options for the constructor
         """
-        self.clf = LogisticRegression(**params)
+        self.clf = LogisticRegression(**params, n_jobs=-1)
         self._params = params
 
         # Default hyperparams
@@ -87,7 +87,7 @@ class LR_Model():
                     Xtrain_kfold = self.scaler.fit_transform(Xtrain_kfold)
                     Xtest_kfold = self.scaler.transform(Xtest_kfold)
 
-                    model_new = LogisticRegression(max_iter=1000)
+                    model_new = LogisticRegression(max_iter=1000, n_jobs=-1)
 
                     model_new.fit(Xtrain_kfold, Ytrain_kfold.values.ravel())
                     y_pred_new = model_new.predict(Xtest_kfold)

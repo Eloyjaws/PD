@@ -24,7 +24,7 @@ class RF_Model():
         Constructor for RF
         :param params: all hyperparameter options for the constructor
         """
-        self.clf = RandomForestClassifier(**params)
+        self.clf = RandomForestClassifier(**params, n_jobs=-1)
         self._params = params
 
         # Default hyperparams
@@ -77,7 +77,7 @@ class RF_Model():
         )
 
         clf = RandomForestClassifier()
-        clf = GridSearchCV(clf, hyperparameters, refit=True)
+        clf = GridSearchCV(clf, hyperparameters, refit=True, n_jobs=-1)
 
         best_model = clf.fit(X_train, y_train)
         self.n_estimators = best_model.best_params_.get('n_estimators')
@@ -132,7 +132,8 @@ class RF_Model():
                         n_estimators=self.n_estimators,
                         max_features=self.max_features,
                         min_samples_split=self.min_samples_split,
-                        min_samples_leaf=self.min_samples_leaf
+                        min_samples_leaf=self.min_samples_leaf,
+                        n_jobs=-1
                     )
 
                     model_new.fit(Xtrain_kfold, Ytrain_kfold.values.ravel())

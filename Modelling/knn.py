@@ -19,7 +19,7 @@ class KNN_Model():
         'algorithm': ['auto', 'ball_tree', 'kd_tree'],
         'leaf_size': np.arange(1, 8),
         'p': [1, 2],
-        'n_jobs': [1]
+        'n_jobs': [-1]
     }):
         """
         Constructor for KNN

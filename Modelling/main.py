@@ -15,15 +15,15 @@ from Modelling.lightGBM import lightGBM_Model  # noqa
 def run_all_experiments():
     model_with_name = namedtuple("model_with_name", ["model_name", "model"])
 
-    model_instances = [
-        model_with_name._make(["SVM", SVM_Model()]),
-        model_with_name._make(["KNN", KNN_Model()]),
-        model_with_name._make(["LR", LR_Model()]),
-        model_with_name._make(["RF", RF_Model()]),
-        model_with_name._make(["lightGBM", lightGBM_Model()])
-    ]
 
     for dataset in Utils.get_dataset_names():
+        model_instances = [
+            model_with_name._make(["SVM", SVM_Model()]),
+            model_with_name._make(["KNN", KNN_Model()]),
+            model_with_name._make(["LR", LR_Model()]),
+            model_with_name._make(["RF", RF_Model()]),
+            model_with_name._make(["lightGBM", lightGBM_Model()])
+        ]
         df = Utils.load_data(dataset)
         for model_name, model_instance in model_instances:
             run_name = f"Model: {model_name} - Dataset: {dataset}"

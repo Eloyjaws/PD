@@ -23,7 +23,7 @@ class SVM_Model():
         Constructor for SVM
         :param params: all hyperparameter options for the constructor such as C, gamma, and kernel
         """
-        self.clf = svm.SVC(**params)
+        self.clf = svm.SVC(**params, n_jobs=-1)
         self._params = params
 
         # Default hyperparams
@@ -68,7 +68,7 @@ class SVM_Model():
         hyperparameters = dict(C=C, gamma=gamma, kernel=kernel)
 
         clf = svm.SVC()
-        clf = GridSearchCV(clf, hyperparameters, refit=True)
+        clf = GridSearchCV(clf, hyperparameters, refit=True, n_jobs=-1)
 
         best_model = clf.fit(X_train, y_train)
         self.C = best_model.best_params_.get('C')
@@ -117,7 +117,7 @@ class SVM_Model():
                     Xtest_kfold = self.scaler.transform(Xtest_kfold)
 
                     model_new = svm.SVC(
-                        C=self.C, gamma=self.gamma, kernel=self.kernel)
+                        C=self.C, gamma=self.gamma, kernel=self.kernel, n_jobs=-1)
 
                     model_new.fit(Xtrain_kfold, Ytrain_kfold.values.ravel())
                     y_pred_new = model_new.predict(Xtest_kfold)
