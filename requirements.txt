@@ -1,9 +1,10 @@
-pydub==0.25.1
-pandas==1.1.5
-numpy==1.19.5
-matplotlib==3.3.3
-seaborn==0.11.2
 lightgbm==3.3.2
-mlflow==1.24.0
+matplotlib==3.3.3
+mlflow==1.23.1
+numpy==1.21.2
+pandas==1.1.5
 parselmouth==1.1.1
-scikit_learn==1.0.2
+pydub==0.25.1
+scikit_learn==1.1.1
+seaborn==0.11.2
+synapseclient==2.6.0
