@@ -19,7 +19,7 @@ class LR_Model():
         Constructor for Logistic Regression
         :param params: all hyperparameter options for the constructor
         """
-        self.clf = LogisticRegression(**params, n_jobs=-1)
+        self.clf = LogisticRegression(**params)
         self._params = params
 
         # Default hyperparams

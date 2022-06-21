@@ -24,7 +24,7 @@ class RF_Model():
         Constructor for RF
         :param params: all hyperparameter options for the constructor
         """
-        self.clf = RandomForestClassifier(**params, n_jobs=-1)
+        self.clf = RandomForestClassifier(**params)
         self._params = params
 
         # Default hyperparams

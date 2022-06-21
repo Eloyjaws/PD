@@ -23,7 +23,7 @@ class SVM_Model():
         Constructor for SVM
         :param params: all hyperparameter options for the constructor such as C, gamma, and kernel
         """
-        self.clf = svm.SVC(**params, n_jobs=-1)
+        self.clf = svm.SVC(**params)
         self._params = params
 
         # Default hyperparams
