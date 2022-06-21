@@ -117,7 +117,7 @@ class SVM_Model():
                     Xtest_kfold = self.scaler.transform(Xtest_kfold)
 
                     model_new = svm.SVC(
-                        C=self.C, gamma=self.gamma, kernel=self.kernel, n_jobs=-1)
+                        C=self.C, gamma=self.gamma, kernel=self.kernel)
 
                     model_new.fit(Xtrain_kfold, Ytrain_kfold.values.ravel())
                     y_pred_new = model_new.predict(Xtest_kfold)
