@@ -3,7 +3,8 @@ import sys
 import numpy as np
 import pandas as pd
 from lightgbm import LGBMClassifier
-from sklearn.model_selection import KFold, GridSearchCV
+from sklearn.model_selection import KFold, StratifiedKFold, StratifiedGroupKFold, GridSearchCV
+import sklearn.metrics as metrics
 from sklearn.metrics import confusion_matrix
 from sklearn.preprocessing import MinMaxScaler
 import mlflow
@@ -95,7 +96,7 @@ class lightGBM_Model():
         best_accuracy = 0
 
         with mlflow.start_run(run_name=run_name) as run:
-            kfold = KFold(K, shuffle=True, random_state=None)
+            kfold = StratifiedKFold(K, shuffle=True, random_state=None)
 
             X_kfold = pd.DataFrame(df.iloc[:, :-1].values)
             y_kfold = pd.DataFrame(df.iloc[:, -1].values.ravel())
@@ -134,8 +135,14 @@ class lightGBM_Model():
                     conf_matrix_kfold = confusion_matrix(
                         Ytest_kfold, y_pred_new)
 
-                    (accuracy, sensitivity, specificity, precision,
-                     f1_score) = Utils.get_metrics_from_confusion_matrix(conf_matrix_kfold)
+                    # (accuracy, sensitivity, specificity, precision,
+                    #  f1_score) = Utils.get_metrics_from_confusion_matrix(conf_matrix_kfold)
+
+                    accuracy = metrics.accuracy_score(Ytest_kfold, y_pred_new)
+                    sensitivity = 0
+                    specificity = 0
+                    precision = metrics.precision_score(Ytest_kfold, y_pred_new)
+                    f1_score = metrics.f1_score(Ytest_kfold, y_pred_new)
 
                     row.append(accuracy)
                     row_specificity.append(specificity)

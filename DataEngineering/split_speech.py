@@ -26,11 +26,13 @@ class SpeechSplitter:
                 parent_dir, filenameWithExt = os.path.split(filepath)
                 filename, ext = os.path.splitext(filenameWithExt)
                 patientID = filename.split('_')[0]
+                if "mPower" in filepath:
+                    patientID = filename.split('.m4a-')[-1]
 
                 output_file_path = os.path.join(output_dir, patientID)
                 Path(output_file_path).mkdir(parents=True, exist_ok=True)
 
-                sound_file = AudioSegment.from_wav(filepath)
+                sound_file = AudioSegment.from_file(filepath)
                 audio_chunks = split_on_silence(sound_file,
                                                 # must be silent for at least half a second
                                                 min_silence_len=min_silence_len,

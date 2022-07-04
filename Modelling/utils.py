@@ -39,23 +39,23 @@ class Utils:
     @staticmethod
     def get_dataset_names():
         datasets = [
-            "mPower",
+            # "mPower",
             "MDVR_KCL",
-            "ItalianParkinsonSpeech",
-            "MDVR_KCL_split_on_silence_500ms",
-            "MDVR_KCL_split_on_silence_1000ms",
-            "MDVR_KCL_split_on_silence_2000ms",
-            "MDVR_KCL_chunk_500ms",
-            "MDVR_KCL_chunk_1000ms",
-            "MDVR_KCL_chunk_3000ms",
-            "MDVR_KCL_chunk_5000ms",
-            "ItalianParkinsonSpeech_split_on_silence_500ms",
-            "ItalianParkinsonSpeech_split_on_silence_1000ms",
-            "ItalianParkinsonSpeech_split_on_silence_2000ms",
-            "ItalianParkinsonSpeech_chunk_500ms",
-            "ItalianParkinsonSpeech_chunk_1000ms",
-            "ItalianParkinsonSpeech_chunk_3000ms",
-            "ItalianParkinsonSpeech_chunk_5000ms",
+            # "ItalianParkinsonSpeech",
+            # "MDVR_KCL_split_on_silence_500ms",
+            # "MDVR_KCL_split_on_silence_1000ms",
+            # "MDVR_KCL_split_on_silence_2000ms",
+            # "MDVR_KCL_chunk_500ms",
+            # "MDVR_KCL_chunk_1000ms",
+            # "MDVR_KCL_chunk_3000ms",
+            # "MDVR_KCL_chunk_5000ms",
+            # "ItalianParkinsonSpeech_split_on_silence_500ms",
+            # "ItalianParkinsonSpeech_split_on_silence_1000ms",
+            # "ItalianParkinsonSpeech_split_on_silence_2000ms",
+            # "ItalianParkinsonSpeech_chunk_500ms",
+            # "ItalianParkinsonSpeech_chunk_1000ms",
+            # "ItalianParkinsonSpeech_chunk_3000ms",
+            # "ItalianParkinsonSpeech_chunk_5000ms",
         ]
         return datasets
 
@@ -146,10 +146,8 @@ class Utils:
         :return: (accuracy, sensitivity, specificity, precision, f1_score)
         """
         try:
-            TN = conf_matrix[0][0]
-            FP = conf_matrix[0][1]
-            FN = conf_matrix[1][0]
-            TP = conf_matrix[1][1]
+
+            TN, FP, FN, TP = conf_matrix.ravel()
 
             accuracy = ((TP + TN) / (TP + TN + FP + FN)) * 100
             sensitivity = (TP/(TP+FN)) * 100  # recall

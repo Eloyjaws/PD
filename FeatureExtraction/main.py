@@ -9,11 +9,38 @@ sys.path.append(os.path.dirname(SCRIPT_DIR))
 from FeatureExtraction.feature_extraction import Feature_Extractor   # noqa
 
 
-dataset_path_mpower = {
-    "mPower": (r"data/dataset/mPower/HC/*/*.wav", r"data/dataset/mPower/PD/*/*.wav")
-}
 dataset_paths = {
-    "mPower": (r"data/dataset/mPower/HC/*.wav", r"data/dataset/mPower/PD/*.wav"),
+    "mPower": (r"data/dataset/mPower/HC/*/*.wav", r"data/dataset/mPower/PD/*/*.wav"),
+    "mPower_split_on_silence_500ms": (
+        r"data/synthetic/mPower_min_silence_500ms/HC/*/*.wav",
+        r"data/synthetic/mPower_min_silence_500ms/PD/*/*.wav",
+    ),
+    "mPower_split_on_silence_1000ms": (
+        r"data/synthetic/mPower_min_silence_1000ms/HC/*/*.wav",
+        r"data/synthetic/mPower_min_silence_1000ms/PD/*/*.wav",
+    ),
+    "mPower_split_on_silence_2000ms": (
+        r"data/synthetic/mPower_min_silence_2000ms/HC/*/*.wav",
+        r"data/synthetic/mPower_min_silence_2000ms/PD/*/*.wav",
+    ),
+    "mPower_chunk_500ms": (
+        r"data/synthetic/mPower_chunk_length_500ms/HC/*/*.wav",
+        r"data/synthetic/mPower_chunk_length_500ms/PD/*/*.wav",
+    ),
+    "mPower_chunk_1000ms": (
+        r"data/synthetic/mPower_chunk_length_1000ms/HC/*/*.wav",
+        r"data/synthetic/mPower_chunk_length_1000ms/PD/*/*.wav",
+    ),
+    "mPower_chunk_3000ms": (
+        r"data/synthetic/mPower_chunk_length_3000ms/HC/*/*.wav",
+        r"data/synthetic/mPower_chunk_length_3000ms/PD/*/*.wav",
+    ),
+    "mPower_chunk_5000ms": (
+        r"data/synthetic/mPower_chunk_length_5000ms/HC/*/*.wav",
+        r"data/synthetic/mPower_chunk_length_5000ms/PD/*/*.wav",
+    ),
+}
+dataset_paths_v0 = {
     "MDVR_KCL": (r"data/dataset/ReadText/HC/*.wav", r"data/dataset/ReadText/PD/*.wav"),
     "MDVR_KCL_split_on_silence_500ms": (r"data/synthetic/MDVR_KCL_min_silence_500ms/HC/*/*.wav", r"data/synthetic/MDVR_KCL_min_silence_500ms/PD/*/*.wav"),
     "MDVR_KCL_split_on_silence_1000ms": (r"data/synthetic/MDVR_KCL_min_silence_1000ms/HC/*/*.wav", r"data/synthetic/MDVR_KCL_min_silence_1000ms/PD/*/*.wav"),

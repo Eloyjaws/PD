@@ -18,18 +18,18 @@ def run_all_experiments():
 
     for dataset in Utils.get_dataset_names():
         model_instances = [
-            model_with_name._make(["SVM", SVM_Model()]),
-            model_with_name._make(["KNN", KNN_Model()]),
-            model_with_name._make(["LR", LR_Model()]),
-            model_with_name._make(["RF", RF_Model()]),
+            # model_with_name._make(["SVM", SVM_Model()]),
+            # model_with_name._make(["KNN", KNN_Model()]),
+            # model_with_name._make(["LR", LR_Model()]),
+            # model_with_name._make(["RF", RF_Model()]),
             model_with_name._make(["lightGBM", lightGBM_Model()])
         ]
         df = Utils.load_data(dataset)
         for model_name, model_instance in model_instances:
             run_name = f"Model: {model_name} - Dataset: {dataset}"
-            for k in [4, 12]:
+            for k in [12]:
                 model_instance.mlflow_run(
-                    df, K=k, run_name=run_name, verbose=True)
+                    df, K=k, run_name=run_name, verbose=1)
 
 
 if __name__ == "__main__":

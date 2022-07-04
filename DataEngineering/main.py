@@ -14,25 +14,27 @@ def generate_synthetic_datasets():
     chunk_lengths = [500, 1000, 3000, 5000]
 
     dataset_paths = {
-        "MDVR_KCL_PD": (r"data/dataset/ReadText/PD/*.wav", r"data/synthetic/MDVR_KCL#/PD"),
-        "MDVR_KCL_HC": (r"data/dataset/ReadText/HC/*.wav", r"data/synthetic/MDVR_KCL#/HC"),
-        "ItalianParkinsonSpeech_EHC": (
-            r"data/dataset/ItalianParkinsonSpeech/EHC/*.wav",
-            r"data/synthetic/ItalianParkinsonSpeech#/EHC",
-        ),
-        "ItalianParkinsonSpeech_PD": (
-            r"data/dataset/ItalianParkinsonSpeech/PD/*.wav",
-            r"data/synthetic/ItalianParkinsonSpeech#/PD",
-        ),
+        # "MDVR_KCL_PD": (r"data/dataset/ReadText/PD/*.wav", r"data/synthetic/MDVR_KCL#/PD"),
+        # "MDVR_KCL_HC": (r"data/dataset/ReadText/HC/*.wav", r"data/synthetic/MDVR_KCL#/HC"),
+        # "ItalianParkinsonSpeech_EHC": (
+        #     r"data/dataset/ItalianParkinsonSpeech/EHC/*.wav",
+        #     r"data/synthetic/ItalianParkinsonSpeech#/EHC",
+        # ),
+        # "ItalianParkinsonSpeech_PD": (
+        #     r"data/dataset/ItalianParkinsonSpeech/PD/*.wav",
+        #     r"data/synthetic/ItalianParkinsonSpeech#/PD",
+        # ),
         "MPower_PD": (
-            r"data/dataset/mPower/PD/*.wav",
+            r"data/dataset/mPower/PD/*/*.wav",
             r"data/synthetic/mPower#/PD",
         ),
         "M_Power_HC": (
-            r"data/dataset/mPower/HC/*.wav",
+            r"data/dataset/mPower/HC/*/*.wav",
             r"data/synthetic/mPower#/HC",
         )
     }
+
+    # TODO: Need to rewrite to extract PD & HC for a dataset in one go - before deleting it
 
     silence_threshold = -40
 
