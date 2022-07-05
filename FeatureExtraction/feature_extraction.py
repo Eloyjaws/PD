@@ -1,10 +1,9 @@
 import numpy as np
-import matplotlib.pyplot as plt
 import pandas as pd
 import parselmouth
 from parselmouth.praat import call
 import glob
-import os.path
+import logging
 from datetime import datetime
 
 class Feature_Extractor:
@@ -44,7 +43,7 @@ class Feature_Extractor:
         
             return f0_mean, f0_std_deviation, hnr, jitter_relative, jitter_absolute, jitter_rap, jitter_ppq5, shimmer_relative, shimmer_localDb, shimmer_apq3, shimmer_apq5
         except:
-            print("Unable to process this file: ", voice_sample)
+            logging.error(f"Unable to process this file: {voice_sample}")
 
     @staticmethod
     def extract_acoustic_features_2(voice_sample, f0_min, f0_max, unit):
@@ -85,7 +84,7 @@ class Feature_Extractor:
             
             return f0_mean, f0_max, f0_min, jitter_relative, jitter_absolute, jitter_rap, jitter_ddp, shimmer_relative, shimmer_localDb, shimmer_apq3, shimmer_apq5, shimmer_dda, hnr
         except Exception as e:
-            print("Unable to process this file: ", voice_sample, e)
+            logging.error(f"Unable to process this file: {voice_sample} {e}")
     
     @staticmethod
     def extract_mfcc(voice_sample):
@@ -105,15 +104,12 @@ class Feature_Extractor:
     @staticmethod
     def extract_mfcc_from_folder(folder_path):
         features = []
-        curr_time = datetime.now()
-        print(f"Extracting MFCC from {folder_path}, time:", curr_time)
-        print(glob.glob(folder_path))
         for filename in glob.glob(folder_path):
             try:
                 mfcc_per_file = Feature_Extractor.extract_mfcc(filename)
                 features.append([filename, mfcc_per_file])
             except Exception as e:
-                print("error while handling file: ", filename, e)
+                logging.error(f"error while handling file: {filename} {e}")
         df = pd.DataFrame(features, columns=['voiceID','mfcc'])
         df[['mfcc_feature0','mfcc_feature1','mfcc_feature2', 'mfcc_feature3','mfcc_feature4','mfcc_feature5', 'mfcc_feature6', 'mfcc_feature7','mfcc_feature8', 'mfcc_feature9', 'mfcc_feature10','mfcc_feature11', 'mfcc_feature12']] = pd.DataFrame(df.mfcc.to_list())
         df = df.drop(columns=['mfcc'])
@@ -133,8 +129,7 @@ class Feature_Extractor:
         localdbShimmer_list = []
         apq3Shimmer_list = []
         aqpq5Shimmer_list = []
-        curr_time = datetime.now()
-        print(f"Extracting Acoustics from {folder_path}, time:", curr_time)
+
         for file in glob.glob(folder_path):
             try:
                 (meanF0, stdevF0, hnr, localJitter, localabsoluteJitter, rapJitter, ppq5Jitter, localShimmer, localdbShimmer, apq3Shimmer, aqpq5Shimmer) = Feature_Extractor.extract_acoustic_features(file, 75, 500, "Hertz") 
@@ -151,7 +146,7 @@ class Feature_Extractor:
                 apq3Shimmer_list.append(apq3Shimmer)
                 aqpq5Shimmer_list.append(aqpq5Shimmer)
             except:
-                print("missed:", file)
+                logging.error(f"missed: {file}")
         df = pd.DataFrame(np.column_stack([file_list, mean_F0_list, sd_F0_list, hnr_list, localJitter_list, localabsoluteJitter_list, rapJitter_list, ppq5Jitter_list, localShimmer_list, localdbShimmer_list, apq3Shimmer_list, aqpq5Shimmer_list]), columns=['voiceID','meanF0Hz', 'stdevF0Hz', 'HNR', 'localJitter', 'localabsoluteJitter', 'rapJitter', 'ppq5Jitter', 'localShimmer', 'localdbShimmer', 'apq3Shimmer', 'apq5Shimmer'])  
         return df
 
@@ -172,7 +167,7 @@ class Feature_Extractor:
         aqpq5Shimmer_list = []
         ddaShimmer_list = []
         curr_time = datetime.now()
-        print(f"Extracting Acoustics from {folder_path}, time:", curr_time)
+
         for file in glob.glob(folder_path):
             try:
                 (meanF0, maxF0, minF0, localJitter, localabsoluteJitter, rapJitter, ddpJitter, localShimmer, localdbShimmer, apq3Shimmer, aqpq5Shimmer, ddaShimmer, hnr) = Feature_Extractor.extract_acoustic_features_2(file, 75, 500, "Hertz") 
@@ -191,7 +186,7 @@ class Feature_Extractor:
                 ddaShimmer_list.append(ddaShimmer)
                 hnr_list.append(hnr)
             except Exception as e:
-                print(f"Missed {file} {e}")
+                logging.error(f"Missed {file} {e}")
         df = pd.DataFrame(np.column_stack([file_list, mean_F0_list, max_F0_list,min_F0_list, localJitter_list, localabsoluteJitter_list, rapJitter_list, ddpJitter_list, localShimmer_list, localdbShimmer_list, apq3Shimmer_list, aqpq5Shimmer_list, ddaShimmer_list, hnr_list]), columns=['voiceID','meanF0Hz', 'maxF0Hz', 'minF0Hz', 'localJitter', 'localabsoluteJitter', 'rapJitter', 'ddpJitter', 'localShimmer', 'localdbShimmer', 'apq3Shimmer', 'apq5Shimmer', 'ddaShimmer', 'hnr'])  
         return df
 

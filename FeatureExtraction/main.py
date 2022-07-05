@@ -50,8 +50,8 @@ dataset_paths_v0 = {
     "MDVR_KCL_chunk_3000ms": (r"data/synthetic/MDVR_KCL_chunk_length_3000ms/HC/*/*.wav", r"data/synthetic/MDVR_KCL_chunk_length_3000ms/PD/*/*.wav"),
     "MDVR_KCL_chunk_5000ms": (r"data/synthetic/MDVR_KCL_chunk_length_5000ms/HC/*/*.wav", r"data/synthetic/MDVR_KCL_chunk_length_5000ms/PD/*/*.wav"),
     "ItalianParkinsonSpeech": (
-        r"data/dataset/ItalianParkinsonSpeech/EHC/*.wav",
-        r"data/dataset/ItalianParkinsonSpeech/PD/*.wav",
+        r"data/dataset/ItalianParkinsonSpeech/EHC/*/*.wav",
+        r"data/dataset/ItalianParkinsonSpeech/PD/*/*.wav",
     ),
     "ItalianParkinsonSpeech_split_on_silence_500ms": (
         r"data/synthetic/ItalianParkinsonSpeech_min_silence_500ms/EHC/*/*.wav",
