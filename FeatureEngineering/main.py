@@ -110,7 +110,7 @@ def extract_features_from_dataset(dataset_info):
     df_all_features = combine_acoustic_and_mfcc_features(df_acoustic_features, df_mfcc_features)
     df_all_features_v2 = combine_acoustic_and_mfcc_features(df_acoustic_features_v2, df_mfcc_features)
     
-    output_dir = f"data3/extracted_features/{dataset_info.name}"
+    output_dir = f"data/extracted_features/{dataset_info.name}"
     Path(output_dir).mkdir(parents=True, exist_ok=True)
     df_all_features.to_csv(f"{output_dir}/All_features.csv", index=False)
     df_all_features_v2.to_csv(f"{output_dir}/All_features_v2.csv", index=False)

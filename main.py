@@ -1,9 +1,14 @@
-from DataEngineering.main import generate_synthetic_datasets
-from FeatureExtraction.main import extract_features_from_all_datasets
+from FeatureEngineering.main import Pipeline
 from Modelling.main import run_all_experiments
 
 
 if __name__ == "__main__":
-    # generate_synthetic_datasets()
-    # extract_features_from_all_datasets()
-    run_all_experiments()
+
+    # Note: If empty - will run extraction for all 24 datasets
+    VIP_dataset_names = [
+
+    ]
+    feature_engineer = Pipeline()
+    feature_engineer.run(names=VIP_dataset_names)
+
+    # run_all_experiments()
