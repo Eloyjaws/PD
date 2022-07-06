@@ -127,6 +127,7 @@ def download_MDVR_KCL_dataset():
     target_dir = "data/dataset/MDVR_KCL/"
     file_names = os.listdir(source_dir)
     
+    Path(target_dir).mkdir(parents=True, exist_ok=True)
     for file_name in file_names:
         shutil.move(os.path.join(source_dir, file_name), os.path.join(target_dir, file_name))
     shutil.rmtree("data/dataset/26-29_09_2017_KCL", onerror = lambda fn, filename, err: logging.error(err) )
@@ -161,6 +162,7 @@ def download_italian_dataset():
     target_dir = "data/dataset/ItalianParkinsonSpeech/"
     file_names = os.listdir(source_dir)
     
+    Path(target_dir).mkdir(parents=True, exist_ok=True)
     for file_name in file_names:
         shutil.move(os.path.join(source_dir, file_name), os.path.join(target_dir, file_name))
     shutil.rmtree("data/dataset/parkinsons_prediction_using_speech", onerror = lambda fn, filename, err: logging.error(err) )
