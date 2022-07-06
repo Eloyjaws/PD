@@ -67,11 +67,15 @@ def extract_features_from_dataset(dataset_info):
     store = manager.dict()
     jobs = []
 
+    # For original datasets, the path to run feature extraction on is the source
+    folder_hc = (dataset_info.sink_HC + Tags.NESTED) if dataset_info.create_dataset else dataset_info.source_HC
+    folder_pd = (dataset_info.sink_PD + Tags.NESTED) if dataset_info.create_dataset else dataset_info.source_PD
+
     jobs.append(multiprocessing.Process(
         target = extract_acoustic_features,
         args = (
-            dataset_info.sink_HC + Tags.NESTED,
-            dataset_info.sink_PD + Tags.NESTED,
+            folder_hc,
+            folder_pd,
             dataset_info,
             store
         )
@@ -80,8 +84,8 @@ def extract_features_from_dataset(dataset_info):
     jobs.append(multiprocessing.Process(
         target = extract_acoustic_features_v2,
         args = (
-            dataset_info.sink_HC + Tags.NESTED,
-            dataset_info.sink_PD + Tags.NESTED,
+            folder_hc,
+            folder_pd,
             dataset_info,
             store
         )
@@ -90,8 +94,8 @@ def extract_features_from_dataset(dataset_info):
     jobs.append(multiprocessing.Process(
         target = extract_mfcc_features,
         args = (
-            dataset_info.sink_HC + Tags.NESTED,
-            dataset_info.sink_PD + Tags.NESTED,
+            folder_hc,
+            folder_pd,
             dataset_info,
             store
         )

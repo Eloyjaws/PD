@@ -31,7 +31,7 @@ def convert_m4a_to_wav(m4a_file_path, delete_after_conversion=True):
         logging.error(f"Conversion Failed: could not load {m4a_file_path}\n")
 
 
-def download_mPower_dataset():
+def download_mPower_dataset(limit = 0):
 
     if(Path("data/dataset/mPower").exists()):
         log("mPower folder found - skipping redownload")
@@ -50,7 +50,8 @@ def download_mPower_dataset():
     log(event_name)
     start_timer(event_name)
 
-    voice_query = f"select * from syn5511444"
+    limit_clause = f" Limit {limit}" if limit > 0 else ""
+    voice_query = f"select * from syn5511444{limit_clause}"
     results = syn.tableQuery(voice_query)
 
     PD_metadata_query = f'SELECT * FROM syn5511429 where "professional-diagnosis" = 1'
@@ -178,7 +179,7 @@ def download_italian_dataset():
 def download_datasets():
     download_MDVR_KCL_dataset()
     download_italian_dataset()
-    download_mPower_dataset()
+    download_mPower_dataset(limit=0)
 
 
 if __name__ == "__main__":

@@ -3,6 +3,7 @@ import sys
 import os.path
 from pathlib import Path
 import pandas as pd
+import logging
 from pydub import AudioSegment
 from pydub.utils import make_chunks
 from pydub.silence import split_on_silence
@@ -30,8 +31,6 @@ class SpeechSplitter:
                 patientID = filename.split('_')[0]
                 if "mPower" in filepath:
                     patientID = filename.split('.m4a-')[-1]
-                if "Italian" in filepath:
-                    leading_path, patientID = os.path.split(parent_dir)
 
                 output_file_path = os.path.join(output_dir, patientID)
                 Path(output_file_path).mkdir(parents=True, exist_ok=True)
@@ -49,8 +48,7 @@ class SpeechSplitter:
                     chunk.export(out_file, format="wav")
 
             except Exception as e:
-                print(e)
-                print("error while handling file: ", filepath)
+                logging.error(f"error while handling file: {filepath} {e}")
         end_timer_and_print(tag)
 
     @staticmethod
@@ -69,7 +67,7 @@ class SpeechSplitter:
                 output_file_path = os.path.join(output_dir, patientID)
                 Path(output_file_path).mkdir(parents=True, exist_ok=True)
 
-                sound_file = AudioSegment.from_wav(filepath)
+                sound_file = AudioSegment.from_file(filepath)
                 audio_chunks = make_chunks(sound_file, chunk_length_ms)
 
                 for chunk_id, chunk in enumerate(audio_chunks):
@@ -77,6 +75,5 @@ class SpeechSplitter:
                         output_file_path, f"chunk_{chunk_id}.wav")
                     chunk.export(out_file, format="wav")
             except Exception as e:
-                print(e)
-                print("error while handling file: ", filepath)
+                logging.error(f"error while handling file: {filepath} {e}")
         end_timer_and_print(tag)
