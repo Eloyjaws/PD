@@ -1,10 +1,16 @@
 import os
 import sys
+import shutil
 from pathlib import Path
 import synapseclient
 from io import BytesIO
 from urllib.request import urlopen
 from zipfile import ZipFile
+
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(os.path.dirname(SCRIPT_DIR))
+
+from utils.timer import start_timer, end_timer_and_print, log  # noqa
 
 
 def convert_m4a_to_wav(m4a_file_path, delete_after_conversion=True):
@@ -38,6 +44,9 @@ def download_mPower_dataset():
 
     syn = synapseclient.Synapse()
     syn.login(email=EMAIL, apiKey=API_KEY, rememberMe=True)
+
+    event_name = "Download mPower Dataset"
+    start_timer(event_name)
 
     voice_query = f"select * from syn5511444 Limit 20"
     results = syn.tableQuery(voice_query)
@@ -89,21 +98,40 @@ def download_mPower_dataset():
         convert_m4a_to_wav(output_file_path)
         os.remove(output_file_path)
 
+    end_timer_and_print(event_name)
 
 def download_MDVR_KCL_dataset():
     zipurl = 'https://zenodo.org/record/2867216/files/26_29_09_2017_KCL.zip?download=1'
 
+    event_name = "Download MDVR_KCL Dataset"
+    start_timer(event_name)
     with urlopen(zipurl) as zipresp:
         with ZipFile(BytesIO(zipresp.read())) as zfile:
             zfile.extractall('data/dataset/')
+    end_timer_and_print(event_name)
 
+    event_name = "Move MDVR_KCL Dataset"
+    start_timer(event_name)
+    source_dir = "data/dataset/26-29_09_2017_KCL/ReadText/"
+    target_dir = "data/dataset/MDVR_KCL/"
+    file_names = os.listdir(source_dir)
+    
+    for file_name in file_names:
+        shutil.move(os.path.join(source_dir, file_name), target_dir)
+    
+    end_timer_and_print(event_name)
 
 def download_italian_dataset():
+    # TODO: Requires IEEE DataPort Login - Consider pulling data from Aishat's repo
     zipurl = 'https://ieee-dataport.s3.amazonaws.com/open/11738/Italian%20Parkinson%27s%20Voice%20and%20speech.zip?response-content-disposition=attachment%3B%20filename%3D%22Italian%20Parkinson%27s%20Voice%20and%20speech.zip%22&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJOHYI4KJCE6Q7MIQ%2F20220621%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20220621T160701Z&X-Amz-SignedHeaders=Host&X-Amz-Expires=86400&X-Amz-Signature=f483cabcc21de465093db71d950b886ae4b1dd958ea89679c0855e966440f932'
+
+    event_name = "Download ItalianParkinsonSpeech Dataset"    
+
+    start_timer(event_name)
     with urlopen(zipurl) as zipresp:
         with ZipFile(BytesIO(zipresp.read())) as zfile:
             zfile.extractall('data/dataset/')
-
+    end_timer_and_print(event_name)
 
 if __name__ == "__main__":
     download_MDVR_KCL_dataset()
