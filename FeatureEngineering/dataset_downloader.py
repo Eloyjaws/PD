@@ -161,7 +161,7 @@ def download_italian_dataset():
     except Exception as e:
         logging.error(f"Failed: {event_name}, {e}")
 
-    source_dir = "data/dataset/parkinsons_prediction_using_speech/dataset/ItalianParkinsonSpeech/"
+    source_dir = "data/dataset/parkinsons_prediction_using_speech-master/dataset/ItalianParkinsonSpeech/"
     target_dir = "data/dataset/ItalianParkinsonSpeech/"
     file_names = os.listdir(source_dir)
     
@@ -171,7 +171,7 @@ def download_italian_dataset():
             shutil.move(os.path.join(source_dir, file_name), os.path.join(target_dir, file_name))
     except Exception as e:
         logging.error(f"Failed: to move files {e}")
-    shutil.rmtree("data/dataset/parkinsons_prediction_using_speech", onerror = lambda fn, filename, err: logging.error(err) )
+    shutil.rmtree("data/dataset/parkinsons_prediction_using_speech-master", onerror = lambda fn, filename, err: logging.error(err) )
 
     end_timer_and_print(event_name)
 
