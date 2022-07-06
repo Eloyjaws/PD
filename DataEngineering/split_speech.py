@@ -65,8 +65,6 @@ class SpeechSplitter:
                 patientID = filename.split('_')[0]
                 if "mPower" in filepath:
                     patientID = filename.split('.m4a-')[-1]
-                if "Italian" in filepath:
-                    leading_path, patientID = os.path.split(parent_dir)
 
                 output_file_path = os.path.join(output_dir, patientID)
                 Path(output_file_path).mkdir(parents=True, exist_ok=True)
