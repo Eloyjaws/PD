@@ -117,7 +117,7 @@ def download_MDVR_KCL_dataset():
     file_names = os.listdir(source_dir)
     
     for file_name in file_names:
-        shutil.move(os.path.join(source_dir, file_name), target_dir)
+        shutil.move(os.path.join(source_dir, file_name), os.path.join(target_dir, file_name))
     
     end_timer_and_print(event_name)
 
