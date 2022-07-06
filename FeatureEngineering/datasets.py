@@ -110,13 +110,13 @@ mPower_configs = [
 ItalianParkinsonSpeech_configs = [
     DatasetInfo(
         name="ItalianParkinsonSpeech", 
-        source_HC=r"data/dataset/ItalianParkinsonSpeech/EHC/*/*.wav",
-        source_PD=r"data/dataset/ItalianParkinsonSpeech/PD/*/*.wav",  
+        source_HC=r"data/dataset/ItalianParkinsonSpeech/EHC/*.wav",
+        source_PD=r"data/dataset/ItalianParkinsonSpeech/PD/*.wav",  
     ),
     DatasetInfo(
         name="ItalianParkinsonSpeech_min_silence_500ms",
-        source_HC=r"data/dataset/ItalianParkinsonSpeech/EHC/*/*.wav",
-        source_PD=r"data/dataset/ItalianParkinsonSpeech/PD/*/*.wav",
+        source_HC=r"data/dataset/ItalianParkinsonSpeech/EHC/*.wav",
+        source_PD=r"data/dataset/ItalianParkinsonSpeech/PD/*.wav",
         sink_HC=r"data/dataset/ItalianParkinsonSpeech_min_silence_500ms/HC",
         sink_PD=r"data/dataset/ItalianParkinsonSpeech_min_silence_500ms/PD",
         create_dataset=True,
@@ -125,8 +125,8 @@ ItalianParkinsonSpeech_configs = [
     ),
     DatasetInfo(
         name="ItalianParkinsonSpeech_min_silence_1000ms",
-        source_HC=r"data/dataset/ItalianParkinsonSpeech/EHC/*/*.wav",
-        source_PD=r"data/dataset/ItalianParkinsonSpeech/PD/*/*.wav",
+        source_HC=r"data/dataset/ItalianParkinsonSpeech/EHC/*.wav",
+        source_PD=r"data/dataset/ItalianParkinsonSpeech/PD/*.wav",
         sink_HC=r"data/dataset/ItalianParkinsonSpeech_min_silence_1000ms/HC",
         sink_PD=r"data/dataset/ItalianParkinsonSpeech_min_silence_1000ms/PD",
         create_dataset=True,
@@ -135,8 +135,8 @@ ItalianParkinsonSpeech_configs = [
     ),
     DatasetInfo(
         name="ItalianParkinsonSpeech_min_silence_2000ms",
-        source_HC=r"data/dataset/ItalianParkinsonSpeech/EHC/*/*.wav",
-        source_PD=r"data/dataset/ItalianParkinsonSpeech/PD/*/*.wav",
+        source_HC=r"data/dataset/ItalianParkinsonSpeech/EHC/*.wav",
+        source_PD=r"data/dataset/ItalianParkinsonSpeech/PD/*.wav",
         sink_HC=r"data/dataset/ItalianParkinsonSpeech_min_silence_2000ms/HC",
         sink_PD=r"data/dataset/ItalianParkinsonSpeech_min_silence_2000ms/PD",
         create_dataset=True,
@@ -145,8 +145,8 @@ ItalianParkinsonSpeech_configs = [
     ),
     DatasetInfo(
         name="ItalianParkinsonSpeech_chunk_500ms",
-        source_HC=r"data/dataset/ItalianParkinsonSpeech/EHC/*/*.wav",
-        source_PD=r"data/dataset/ItalianParkinsonSpeech/PD/*/*.wav",
+        source_HC=r"data/dataset/ItalianParkinsonSpeech/EHC/*.wav",
+        source_PD=r"data/dataset/ItalianParkinsonSpeech/PD/*.wav",
         sink_HC=r"data/dataset/ItalianParkinsonSpeech_chunk_500ms/HC",
         sink_PD=r"data/dataset/ItalianParkinsonSpeech_chunk_500ms/PD",
         create_dataset=True,
@@ -155,8 +155,8 @@ ItalianParkinsonSpeech_configs = [
     ),
     DatasetInfo(
         name="ItalianParkinsonSpeech_chunk_1000ms",
-        source_HC=r"data/dataset/ItalianParkinsonSpeech/EHC/*/*.wav",
-        source_PD=r"data/dataset/ItalianParkinsonSpeech/PD/*/*.wav",
+        source_HC=r"data/dataset/ItalianParkinsonSpeech/EHC/*.wav",
+        source_PD=r"data/dataset/ItalianParkinsonSpeech/PD/*.wav",
         sink_HC=r"data/dataset/ItalianParkinsonSpeech_chunk_1000ms/HC",
         sink_PD=r"data/dataset/ItalianParkinsonSpeech_chunk_1000ms/PD",
         create_dataset=True,
@@ -165,8 +165,8 @@ ItalianParkinsonSpeech_configs = [
     ),
     DatasetInfo(
         name="ItalianParkinsonSpeech_chunk_3000ms",
-        source_HC=r"data/dataset/ItalianParkinsonSpeech/EHC/*/*.wav",
-        source_PD=r"data/dataset/ItalianParkinsonSpeech/PD/*/*.wav",
+        source_HC=r"data/dataset/ItalianParkinsonSpeech/EHC/*.wav",
+        source_PD=r"data/dataset/ItalianParkinsonSpeech/PD/*.wav",
         sink_HC=r"data/dataset/ItalianParkinsonSpeech_chunk_3000ms/HC",
         sink_PD=r"data/dataset/ItalianParkinsonSpeech_chunk_3000ms/PD",
         create_dataset=True,
@@ -175,8 +175,8 @@ ItalianParkinsonSpeech_configs = [
     ),
     DatasetInfo(
         name="ItalianParkinsonSpeech_chunk_5000ms",
-        source_HC=r"data/dataset/ItalianParkinsonSpeech/EHC/*/*.wav",
-        source_PD=r"data/dataset/ItalianParkinsonSpeech/PD/*/*.wav",
+        source_HC=r"data/dataset/ItalianParkinsonSpeech/EHC/*.wav",
+        source_PD=r"data/dataset/ItalianParkinsonSpeech/PD/*.wav",
         sink_HC=r"data/dataset/ItalianParkinsonSpeech_chunk_5000ms/HC",
         sink_PD=r"data/dataset/ItalianParkinsonSpeech_chunk_5000ms/PD",
         create_dataset=True,
