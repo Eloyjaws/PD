@@ -142,9 +142,12 @@ class Pipeline:
                 filter(lambda dataset: dataset.name in names, dataset_info_objects))
 
         for dataset_info in dataset_info_objects:
-            generate_dataset(dataset_info)
-            extract_features_from_dataset(dataset_info)
-            delete_dataset(dataset_info)
+            try:
+                generate_dataset(dataset_info)
+                extract_features_from_dataset(dataset_info)
+                delete_dataset(dataset_info)
+            except Exception as e:
+                logging.error(f"Feature engineering failed for {dataset_info.name}")
 
 
 if __name__ == "__main__":
