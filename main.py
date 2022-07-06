@@ -11,4 +11,4 @@ if __name__ == "__main__":
     feature_engineer = Pipeline()
     feature_engineer.run(names=VIP_dataset_names)
 
-    # run_all_experiments()
+    run_all_experiments()
