@@ -24,9 +24,9 @@ class DatasetInfo:
         self.duration = duration
 
 
-
     def __repr__(self) -> str:
         return f"name = {self.name}, source_HC = {self.source_HC}, source_PD = {self.source_PD}, sink_HC = {self.sink_HC}, sink_PD = {self.sink_PD}, create_dataset = {self.create_dataset}, method = {self.method}, duration = {self.duration}"
+
 
 mPower_configs = [
     DatasetInfo(

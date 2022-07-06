@@ -5,7 +5,6 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.dirname(SCRIPT_DIR))
 
 from DataEngineering.split_speech import SpeechSplitter  # noqa
-from DataEngineering.dataset_downloader import download_mPower_dataset, download_MDVR_KCL_dataset, download_italian_dataset  # noqa
 
 
 def generate_synthetic_datasets():
@@ -60,7 +59,4 @@ def generate_synthetic_datasets():
 
 
 if __name__ == "__main__":
-    download_MDVR_KCL_dataset()
-    download_italian_dataset()
-    download_mPower_dataset()
     generate_synthetic_datasets()

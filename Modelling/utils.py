@@ -40,8 +40,8 @@ class Utils:
     def get_dataset_names():
         datasets = [
             # "mPower",
-            "MDVR_KCL",
-            # "ItalianParkinsonSpeech",
+            # "MDVR_KCL",
+            "ItalianParkinsonSpeech",
             # "MDVR_KCL_split_on_silence_500ms",
             # "MDVR_KCL_split_on_silence_1000ms",
             # "MDVR_KCL_split_on_silence_2000ms",
@@ -72,6 +72,7 @@ class Utils:
         # Separate dependent and independent variable
         df_X = df.iloc[:, :-1]
         df_Y = df.iloc[:, -1]
+        # TODO: Stratify on label
         # Split the dataset into the Training set and Test set
         return train_test_split(df_X, df_Y, test_size=0.3, random_state=0)
 

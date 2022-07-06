@@ -134,8 +134,13 @@ def download_MDVR_KCL_dataset():
     end_timer_and_print(event_name)
 
 def download_italian_dataset():
-    # TODO: Requires IEEE DataPort Login - Consider pulling data from Aishat's repo
-    zipurl = 'https://ieee-dataport.s3.amazonaws.com/open/11738/Italian%20Parkinson%27s%20Voice%20and%20speech.zip?response-content-disposition=attachment%3B%20filename%3D%22Italian%20Parkinson%27s%20Voice%20and%20speech.zip%22&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJOHYI4KJCE6Q7MIQ%2F20220621%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20220621T160701Z&X-Amz-SignedHeaders=Host&X-Amz-Expires=86400&X-Amz-Signature=f483cabcc21de465093db71d950b886ae4b1dd958ea89679c0855e966440f932'
+    # # TODO: Requires IEEE DataPort Login - Consider pulling data from Aishat's repo
+    # zipurl = 'https://ieee-dataport.s3.amazonaws.com/open/11738/Italian%20Parkinson%27s%20Voice%20and%20speech.zip?response-content-disposition=attachment%3B%20filename%3D%22Italian%20Parkinson%27s%20Voice%20and%20speech.zip%22&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJOHYI4KJCE6Q7MIQ%2F20220621%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20220621T160701Z&X-Amz-SignedHeaders=Host&X-Amz-Expires=86400&X-Amz-Signature=f483cabcc21de465093db71d950b886ae4b1dd958ea89679c0855e966440f932'
+
+    # Use dataset stored in Aeesha-T's repo
+    # https://github.com/aeesha-T/parkinsons_prediction_using_speech
+    zipurl = "https://codeload.github.com/aeesha-T/parkinsons_prediction_using_speech/zip/refs/heads/master"
+    
 
     if(Path("data/dataset/ItalianParkinsonSpeech").exists()):
         log("ItalianParkinsonSpeech folder found - skipping redownload")
@@ -152,9 +157,21 @@ def download_italian_dataset():
     except Exception as e:
         logging.error(f"Failed: {event_name}, {e}")
 
+    source_dir = "data/dataset/parkinsons_prediction_using_speech/dataset/ItalianParkinsonSpeech/"
+    target_dir = "data/dataset/ItalianParkinsonSpeech/"
+    file_names = os.listdir(source_dir)
+    
+    for file_name in file_names:
+        shutil.move(os.path.join(source_dir, file_name), os.path.join(target_dir, file_name))
+    shutil.rmtree("data/dataset/parkinsons_prediction_using_speech", onerror = lambda fn, filename, err: logging.error(err) )
+
     end_timer_and_print(event_name)
 
-if __name__ == "__main__":
+def download_datasets():
     download_MDVR_KCL_dataset()
     download_italian_dataset()
     download_mPower_dataset()
+
+
+if __name__ == "__main__":
+    download_datasets()
