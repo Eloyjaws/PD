@@ -50,7 +50,7 @@ def download_mPower_dataset():
     log(event_name)
     start_timer(event_name)
 
-    voice_query = f"select * from syn5511444 Limit 20"
+    voice_query = f"select * from syn5511444"
     results = syn.tableQuery(voice_query)
 
     PD_metadata_query = f'SELECT * FROM syn5511429 where "professional-diagnosis" = 1'
