@@ -3,7 +3,7 @@ import sys
 import numpy as np
 import pandas as pd
 from sklearn import svm
-from sklearn.model_selection import KFold, GridSearchCV
+from sklearn.model_selection import KFold, StratifiedKFold, GridSearchCV
 from sklearn.metrics import confusion_matrix
 from sklearn.preprocessing import MinMaxScaler
 import mlflow
@@ -106,7 +106,7 @@ class SVM_Model():
 
         start_timer(event_name)
 
-        kfold = KFold(K, shuffle=True, random_state=None)
+        kfold = StratifiedKFold(K, shuffle=True, random_state=None)
         row, row_specificity, row_sensitivity, row_precision, row_f1 = [], [], [], [], []
 
         row.append(i)

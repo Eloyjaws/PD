@@ -3,7 +3,7 @@ import sys
 import numpy as np
 import pandas as pd
 from sklearn.linear_model import LogisticRegression
-from sklearn.model_selection import KFold
+from sklearn.model_selection import KFold, StratifiedKFold
 from sklearn.metrics import confusion_matrix
 from sklearn.preprocessing import MinMaxScaler
 import mlflow
@@ -65,7 +65,7 @@ class LR_Model():
         best_accuracy = 0
 
         with mlflow.start_run(run_name=run_name) as run:
-            kfold = KFold(K, shuffle=True, random_state=None)
+            kfold = StratifiedKFold(K, shuffle=True, random_state=None)
 
             X_kfold = pd.DataFrame(df.iloc[:, :-1].values)
             y_kfold = pd.DataFrame(df.iloc[:, -1].values.ravel())
