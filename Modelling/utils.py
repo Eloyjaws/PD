@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 from sklearn.utils.multiclass import unique_labels
 from sklearn.metrics import confusion_matrix
 from sklearn.model_selection import train_test_split
+import logging
 
 
 class MLFlowUtils:
@@ -36,36 +37,6 @@ class MLFlowUtils:
 
 
 class Utils:
-    @staticmethod
-    def get_dataset_names():
-        datasets = [
-            "MDVR_KCL",
-            "MDVR_KCL_split_on_silence_500ms",
-            "MDVR_KCL_split_on_silence_1000ms",
-            "MDVR_KCL_split_on_silence_2000ms",
-            "MDVR_KCL_chunk_500ms",
-            "MDVR_KCL_chunk_1000ms",
-            "MDVR_KCL_chunk_3000ms",
-            "MDVR_KCL_chunk_5000ms",
-            "ItalianParkinsonSpeech",
-            "ItalianParkinsonSpeech_split_on_silence_500ms",
-            "ItalianParkinsonSpeech_split_on_silence_1000ms",
-            "ItalianParkinsonSpeech_split_on_silence_2000ms",
-            "ItalianParkinsonSpeech_chunk_500ms",
-            "ItalianParkinsonSpeech_chunk_1000ms",
-            "ItalianParkinsonSpeech_chunk_3000ms",
-            "ItalianParkinsonSpeech_chunk_5000ms",
-            "mPower",
-            "mPower_split_on_silence_500ms",
-            "mPower_split_on_silence_1000ms",
-            "mPower_split_on_silence_2000ms",
-            "mPower_chunk_500ms",
-            "mPower_chunk_1000ms",
-            "mPower_chunk_3000ms",
-            "mPower_chunk_5000ms",
-        ]
-        return datasets
-
     @staticmethod
     def load_data(dataset_name):
         df = pd.read_csv(
@@ -114,10 +85,10 @@ class Utils:
         classes = classes[unique_labels(y_true, y_pred)]
         if normalize:
             cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
-            print("Normalized confusion matrix")
+            logging.info("Normalized confusion matrix")
         else:
-            print('Confusion matrix, without normalization')
-        print(cm)
+            logging.info('Confusion matrix, without normalization')
+        logging.info(cm)
 
         fig, ax = plt.subplots()
         im = ax.imshow(cm, interpolation='nearest', cmap=cmap)
@@ -166,13 +137,12 @@ class Utils:
 
             return (accuracy, sensitivity, specificity, precision, f1_score)
         except Exception as e:
-            print("Err: failed to extract metrics from confusion matrix")
+            logging.info(f"Err: failed to extract metrics from confusion matrix \n{e}")
             return (0, 0, 0, 0, 0)
 
     @staticmethod
     def print_aggregated_KFold_metric(data, title, K=4):
         columns = ['Loops'] + \
             [f"fold {i}" for i in range(1, K+1)] + [f"mean {title}"]
-        data = pd.DataFrame(data, columns=columns)
-        print(f"\n\n{title}")
-        print(data)
+        data = pd.DataFrame(list(data), columns=columns)
+        logging.info(f"\n\n{title} \n{data}")

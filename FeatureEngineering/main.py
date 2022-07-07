@@ -151,7 +151,7 @@ class Pipeline:
                 extract_features_from_dataset(dataset_info)
                 delete_dataset(dataset_info)
             except Exception as e:
-                logging.error(f"Feature engineering failed for {dataset_info.name}")
+                logging.error(f"Feature engineering failed for {dataset_info.name} \n{e}")
 
 
 if __name__ == "__main__":

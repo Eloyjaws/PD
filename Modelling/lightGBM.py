@@ -8,10 +8,12 @@ import sklearn.metrics as metrics
 from sklearn.metrics import confusion_matrix
 from sklearn.preprocessing import MinMaxScaler
 import mlflow
+import logging
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.dirname(SCRIPT_DIR))
 from Modelling.utils import Utils  # noqa
+from utils.timer import start_timer, end_timer_and_print, log  # noqa
 
 
 class lightGBM_Model():
@@ -55,8 +57,12 @@ class lightGBM_Model():
         """
         return self._params
 
-    def tune_hyperparameters(self, df):
+    def tune_hyperparameters(self, df, run_name):
         ######## Begin Hyperparameter tuning for Classifier ####################
+        event_name = f"Hyperparameter tuning {run_name}"
+        log(event_name)
+        start_timer(event_name)
+
         (X_train, X_test, y_train, y_test) = Utils.get_train_test_data(df)
 
         # Apply Min-Max Scaling
@@ -77,13 +83,15 @@ class lightGBM_Model():
         clf = GridSearchCV(clf, hyperparameters, refit=True)
 
         best_model = clf.fit(X_train, y_train)
-        print(best_model.best_params_)
         self.learning_rate = best_model.best_params_.get('learning_rate')
         self.num_leaves = best_model.best_params_.get('num_leaves')
         self.n_estimators = best_model.best_params_.get('n_estimators')
+        
+        log(f"Best Hyperparameters for {run_name} {best_model.best_params_}")
+        end_timer_and_print(event_name)
         ######## End Hyperparameter tuning for Classifier ####################
 
-    def mlflow_run(self, df, K=4, run_name=f"Light GBM Experiment", verbose=True):
+    def mlflow_run(self, df, K=6, run_name=f"Light GBM Experiment", verbose=True):
         """
         This method trains, computes metrics, and logs all metrics, parameters,
         and artifacts for the current run
@@ -91,7 +99,9 @@ class lightGBM_Model():
         :param run_name: Name of the experiment as logged by MLflow
         :return: MLflow Tuple (ExperimentID, runID)
         """
-        self.tune_hyperparameters(df)
+        log(run_name)
+        start_timer(run_name)
+        self.tune_hyperparameters(df, run_name)
 
         best_accuracy = 0
 
@@ -103,7 +113,7 @@ class lightGBM_Model():
 
             k_accuracy_list, k_specificity, k_sensitivity, k_precision, k_f1 = [], [], [], [], []
 
-            for i in range(1, 12):
+            for i in range(1, 13):
                 row, row_specificity, row_sensitivity, row_precision, row_f1 = [], [], [], [], []
 
                 row.append(i)
@@ -135,14 +145,8 @@ class lightGBM_Model():
                     conf_matrix_kfold = confusion_matrix(
                         Ytest_kfold, y_pred_new)
 
-                    # (accuracy, sensitivity, specificity, precision,
-                    #  f1_score) = Utils.get_metrics_from_confusion_matrix(conf_matrix_kfold)
-
-                    accuracy = metrics.accuracy_score(Ytest_kfold, y_pred_new)
-                    sensitivity = 0
-                    specificity = 0
-                    precision = metrics.precision_score(Ytest_kfold, y_pred_new)
-                    f1_score = metrics.f1_score(Ytest_kfold, y_pred_new)
+                    (accuracy, sensitivity, specificity, precision,
+                     f1_score) = Utils.get_metrics_from_confusion_matrix(conf_matrix_kfold)
 
                     row.append(accuracy)
                     row_specificity.append(specificity)
@@ -171,7 +175,6 @@ class lightGBM_Model():
                 k_sensitivity.append(row_sensitivity)
                 k_precision.append(row_precision)
                 k_f1.append(row_f1)
-
             # Log model and params using the MLflow sklearn APIs
             mlflow.sklearn.log_model(self.clf, "light-GBM-model")
             mlflow.log_param('learning_rate', self.learning_rate)
@@ -192,7 +195,7 @@ class lightGBM_Model():
             mlflow.log_metric("F1-Score", avg_f1_score)
 
             if verbose:
-                print("Light GBM Kfold Evaluation")
+                log("Light GBM Kfold Evaluation")
                 Utils.print_aggregated_KFold_metric(
                     k_accuracy_list, "accuracy", K)
                 Utils.print_aggregated_KFold_metric(
@@ -206,8 +209,9 @@ class lightGBM_Model():
             # get current run and experiment id
             runID = run.info.run_uuid
             experimentID = run.info.experiment_id
-            print("Completed MLflow Run with run_id {} and experiment_id {}".format(
+            log("Completed MLflow Run with run_id {} and experiment_id {}".format(
                 runID, experimentID))
+            end_timer_and_print(run_name)
             return (experimentID, runID)
 
     def save(self, path="."):

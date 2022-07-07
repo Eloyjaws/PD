@@ -7,10 +7,13 @@ from sklearn.model_selection import KFold, GridSearchCV
 from sklearn.metrics import confusion_matrix
 from sklearn.preprocessing import MinMaxScaler
 import mlflow
+import logging
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.dirname(SCRIPT_DIR))
 from Modelling.utils import Utils  # noqa
+from utils.timer import start_timer, end_timer_and_print, log  # noqa
+
 
 
 class RF_Model():
@@ -56,8 +59,12 @@ class RF_Model():
         """
         return self._params
 
-    def tune_hyperparameters(self, df):
+    def tune_hyperparameters(self, df, run_name):
         ######## Begin Hyperparameter tuning for Classifier ####################
+        event_name = f"Hyperparameter tuning {run_name}"
+        log(event_name)
+        start_timer(event_name)
+        
         (X_train, X_test, y_train, y_test) = Utils.get_train_test_data(df)
 
         # Apply Min-Max Scaling
@@ -85,10 +92,12 @@ class RF_Model():
         self.min_samples_split = best_model.best_params_.get(
             'min_samples_split')
         self.min_samples_leaf = best_model.best_params_.get('min_samples_leaf')
-        print(best_model.best_params_)
+        
+        log(f"Best Hyperparameters for {run_name} {best_model.best_params_}")
+        end_timer_and_print(event_name)
         ######## End Hyperparameter tuning for Classifier ####################
 
-    def mlflow_run(self, df, K=4, run_name=f"SVM Experiment", verbose=True):
+    def mlflow_run(self, df, K=6, run_name=f"RF Experiment", verbose=True):
         """
         This method trains, computes metrics, and logs all metrics, parameters,
         and artifacts for the current run
@@ -96,7 +105,9 @@ class RF_Model():
         :param run_name: Name of the experiment as logged by MLflow
         :return: MLflow Tuple (ExperimentID, runID)
         """
-        self.tune_hyperparameters(df)
+        log(run_name)
+        start_timer(run_name)
+        self.tune_hyperparameters(df, run_name)
 
         best_accuracy = 0
 
@@ -108,7 +119,7 @@ class RF_Model():
 
             k_accuracy_list, k_specificity, k_sensitivity, k_precision, k_f1 = [], [], [], [], []
 
-            for i in range(1, 12):
+            for i in range(1, 13):
                 row, row_specificity, row_sensitivity, row_precision, row_f1 = [], [], [], [], []
 
                 row.append(i)
@@ -194,7 +205,7 @@ class RF_Model():
             mlflow.log_metric("F1-Score", avg_f1_score)
 
             if verbose:
-                print("RF Kfold Evaluation")
+                log("RF Kfold Evaluation")
                 Utils.print_aggregated_KFold_metric(
                     k_accuracy_list, "accuracy", K)
                 Utils.print_aggregated_KFold_metric(
@@ -208,8 +219,9 @@ class RF_Model():
             # get current run and experiment id
             runID = run.info.run_uuid
             experimentID = run.info.experiment_id
-            print("Completed MLflow Run with run_id {} and experiment_id {}".format(
+            log("Completed MLflow Run with run_id {} and experiment_id {}".format(
                 runID, experimentID))
+            end_timer_and_print(run_name)
             return (experimentID, runID)
 
     def save(self, path="."):
