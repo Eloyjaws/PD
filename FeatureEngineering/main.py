@@ -134,10 +134,21 @@ def delete_dataset(dataset_info):
     end_timer_and_print(event_name)
 
 
+def process(dataset_info):
+    log(f"Running job: {dataset_info.name}")
+    try:
+        generate_dataset(dataset_info)
+        extract_features_from_dataset(dataset_info)
+        delete_dataset(dataset_info)
+    except Exception as e:
+        logging.error(f"Feature engineering failed for {dataset_info.name} \n{e}")
+
+
 class Pipeline:
     def __init__(self) -> None:
         self.timer = None
         self.threadpool = []
+
 
     def run(self, names=[]):
         dataset_info_objects = datasets
@@ -145,13 +156,24 @@ class Pipeline:
             dataset_info_objects = list(
                 filter(lambda dataset: dataset.name in names, dataset_info_objects))
 
+        jobs = []
+
         for dataset_info in dataset_info_objects:
-            try:
-                generate_dataset(dataset_info)
-                extract_features_from_dataset(dataset_info)
-                delete_dataset(dataset_info)
-            except Exception as e:
-                logging.error(f"Feature engineering failed for {dataset_info.name} \n{e}")
+            jobs.append(multiprocessing.Process(
+                target = process,
+                args = ([dataset_info])
+            ))
+        
+        # Run jobs in twos
+        for i in range(0, len(jobs), 2):
+            jobs[i].start()
+            if(i+1 < len(jobs)):
+                jobs[i+1].start()
+            
+            jobs[i].join()
+            if(i+1 < len(jobs)):
+                jobs[i+1].join()
+
 
 
 if __name__ == "__main__":

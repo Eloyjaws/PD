@@ -10,6 +10,7 @@ from Modelling.knn import KNN_Model  # noqa
 from Modelling.logistic_regression import LR_Model  # noqa
 from Modelling.random_forests import RF_Model  # noqa
 from Modelling.lightGBM import lightGBM_Model  # noqa
+from Modelling.TabNet import TabNet_Model  # noqa
 from FeatureEngineering.datasets import datasets # noqa
 
 
@@ -25,11 +26,12 @@ def run_experiments(dataset_names_to_run = []):
     for dataset_info in dataset_info_objects:
         dataset_name = dataset_info.name
         model_instances = [
-            model_with_name._make(["lightGBM", lightGBM_Model()]),
-            model_with_name._make(["KNN", KNN_Model()]),
-            model_with_name._make(["LR", LR_Model()]),
-            model_with_name._make(["RF", RF_Model()]),
-            model_with_name._make(["SVM", SVM_Model()]),
+            # model_with_name._make(["lightGBM", lightGBM_Model()]),
+            # model_with_name._make(["KNN", KNN_Model()]),
+            # model_with_name._make(["LR", LR_Model()]),
+            # model_with_name._make(["RF", RF_Model()]),
+            # model_with_name._make(["SVM", SVM_Model()]),
+            model_with_name._make(["TabNet", TabNet_Model()]),
         ]
         df = Utils.load_data(dataset_name)
 
