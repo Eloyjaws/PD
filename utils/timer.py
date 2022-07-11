@@ -29,5 +29,6 @@ def start_timer(event="default"):
 def end_timer_and_print(event="default"):
     end_time = time.time()
     started_at = start_times.get(event)
+    del start_times[event]
     run_time = end_time - started_at
     logging.info(f"{event} ran in {run_time:.3f} secs")
