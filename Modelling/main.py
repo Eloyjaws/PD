@@ -11,7 +11,7 @@ from Modelling.logistic_regression import LR_Model  # noqa
 from Modelling.random_forests import RF_Model  # noqa
 from Modelling.lightGBM import lightGBM_Model  # noqa
 from Modelling.TabNet import TabNet_Model  # noqa
-from FeatureEngineering.datasets import datasets # noqa
+from datasets import datasets # noqa
 
 
 def run_experiments(dataset_names_to_run = []):

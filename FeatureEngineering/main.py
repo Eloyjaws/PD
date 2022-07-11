@@ -9,7 +9,7 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.dirname(SCRIPT_DIR))
 
 from DataEngineering.split_speech import SpeechSplitter  # noqa
-from FeatureEngineering.datasets import datasets  # noqa
+from datasets import datasets  # noqa
 from FeatureEngineering.extraction import extract_acoustic_features, extract_acoustic_features_v2, extract_mfcc_features, combine_acoustic_and_mfcc_features  # noqa
 
 from utils.timer import start_timer, end_timer_and_print, log  # noqa
