@@ -50,9 +50,8 @@ class Utils:
         # Separate dependent and independent variable
         df_X = df.iloc[:, :-1]
         df_Y = df.iloc[:, -1]
-        # TODO: Stratify on label
         # Split the dataset into the Training set and Test set
-        return train_test_split(df_X, df_Y, test_size=0.3, random_state=0)
+        return train_test_split(df_X, df_Y, test_size=0.3, random_state=0, stratify=df_Y)
 
     @staticmethod
     def plot_confusion_matrix(y_true, y_pred, classes,
