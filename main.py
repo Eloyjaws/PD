@@ -2,7 +2,7 @@ from FeatureEngineering.dataset_downloader import download_datasets
 from FeatureEngineering.main import Pipeline
 from Modelling.main import run_experiments
 
-VERSION = 0.1
+VERSION = 0.12
 EXPERIMENT_NAME = f"Initial Experiments - V{VERSION}"
 
 if __name__ == "__main__":
