@@ -101,7 +101,7 @@ class TabNet_Model():
                 eval_metric=['accuracy', F1_Score, 'auc'], 
                 patience=100,
                 max_epochs=1440,
-                batch_size=512,
+                batch_size=1024,
             )
         
             y1,  y1_hat = y_train.values, model.predict(X_train.values)
