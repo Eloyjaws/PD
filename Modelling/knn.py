@@ -13,6 +13,7 @@ sys.path.append(os.path.dirname(SCRIPT_DIR))
 from Modelling.utils import Utils  # noqa
 from utils.timer import start_timer, end_timer_and_print, log  # noqa
 
+
 class KNN_Model():
     def __init__(self, params={
         'n_neighbors': np.arange(1, 8),
@@ -98,7 +99,7 @@ class KNN_Model():
         self.leaf_size = best_model.best_params_.get('leaf_size')
         self.p = best_model.best_params_.get('p')
         self.n_jobs = best_model.best_params_.get('n_jobs')
-                
+
         log(f"Best Hyperparameters for {run_name} {best_model.best_params_}")
         end_timer_and_print(event_name)
         ######## End Hyperparameter tuning for Classifier ####################
@@ -117,9 +118,9 @@ class KNN_Model():
 
         best_accuracy = 0
         tags = {
-            "model_class": "LR",
+            "model_class": "KNN",
             "dataset_name": run_name.split(" - Dataset: ")[-1],
-            }
+        }
 
         with mlflow.start_run(run_name=run_name) as run:
             mlflow.set_tags(tags)
