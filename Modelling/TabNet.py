@@ -22,10 +22,11 @@ from utils.timer import start_timer, end_timer_and_print, log  # noqa
 
 grid_S = {
     "n_a": [8, 16],                     
-    "n_independent": [2, 4],           
-    "n_shared": [2, 4],                
-    "n_steps": [3, 6],                   
-    "gamma": [1.0, 1.3],                   
+    "n_independent": [2],           
+    "n_shared": [4],                
+    "n_steps": [3, 6, 8, 10],                   
+    "gamma": [1.0, 1.3],   
+    "device_name": ["cpu"],                
     "verbose": [0]
 }
 
@@ -225,11 +226,12 @@ class TabNet_Model():
             # Use multiprocessing to compute each run in parallel 
             # Some attempts fail and segfault - loop until we have 12 entries   
             trials = 1
+            ctx = mp.get_context('spawn')
             while (len(self.k_accuracy_list) < 12):
                 jobs = []
                 for i in range(trials, trials+12):
                     jobs.append(
-                        mp.Process(
+                        ctx.Process(
                             target=self.training_loop,
                             args=(run_name, i, K)
                         )

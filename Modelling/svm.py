@@ -187,9 +187,10 @@ class SVM_Model():
             
             # Use multiprocessing to compute each run in parallel    
             jobs = []
+            ctx = mp.get_context('spawn')
             for i in range(1, 13):
                 jobs.append(
-                    mp.Process(
+                    ctx.Process(
                         target=self.training_loop,
                         args=(run_name, i, K)
                     )
