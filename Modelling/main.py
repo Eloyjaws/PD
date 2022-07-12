@@ -1,6 +1,7 @@
 import os
 import sys
 import mlflow
+import logging
 from collections import namedtuple
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -28,18 +29,21 @@ def run_experiments(experiment_name, dataset_names_to_run = []):
     for dataset_info in dataset_info_objects:
         dataset_name = dataset_info.name
         model_instances = [
-            # model_with_name._make(["LR", LR_Model()]),
-            # model_with_name._make(["RF", RF_Model()]),
-            # model_with_name._make(["KNN", KNN_Model()]),
-            # model_with_name._make(["SVM", SVM_Model()]),
-            # model_with_name._make(["lightGBM", lightGBM_Model()]),
+            model_with_name._make(["LR", LR_Model()]),
+            model_with_name._make(["RF", RF_Model()]),
+            model_with_name._make(["KNN", KNN_Model()]),
+            model_with_name._make(["SVM", SVM_Model()]),
+            model_with_name._make(["lightGBM", lightGBM_Model()]),
             model_with_name._make(["TabNet", TabNet_Model()]),
         ]
         df = Utils.load_data(dataset_name)
 
         for model_name, model_instance in model_instances:
             run_name = f"Model: {model_name} - Dataset: {dataset_name}"
-            model_instance.mlflow_run(df, K=5, run_name=run_name, verbose=1)
+            try:
+                model_instance.mlflow_run(df, K=5, run_name=run_name, verbose=1)
+            except Exception as e:
+                logging.error(f"FAILED to complete {run_name}")
 
 
 if __name__ == "__main__":
