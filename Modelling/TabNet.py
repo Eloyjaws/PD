@@ -21,10 +21,10 @@ from Modelling.utils import Utils  # noqa
 from utils.timer import start_timer, end_timer_and_print, log  # noqa
 
 grid_S = {
-    "n_a": [8, 16],                     
+    "n_a": [8],                     
     "n_independent": [2],           
     "n_shared": [4],                
-    "n_steps": [3, 6, 8, 10],                   
+    "n_steps": [3, 6, 8],                   
     "gamma": [1.0, 1.3],   
     "device_name": ["cpu"],                
     "verbose": [0]
