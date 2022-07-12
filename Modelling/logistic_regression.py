@@ -3,11 +3,10 @@ import sys
 import numpy as np
 import pandas as pd
 from sklearn.linear_model import LogisticRegression
-from sklearn.model_selection import KFold, StratifiedKFold
+from sklearn.model_selection import StratifiedKFold
 from sklearn.metrics import confusion_matrix
 from sklearn.preprocessing import MinMaxScaler
 import mlflow
-import logging
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.dirname(SCRIPT_DIR))
@@ -51,7 +50,7 @@ class LR_Model():
         return self._params
 
 
-    def mlflow_run(self, df, K=6, run_name=f"LR Experiment", verbose=True):
+    def mlflow_run(self, df, K=5, run_name=f"LR Experiment", verbose=True):
         """
         This method trains, computes metrics, and logs all metrics, parameters,
         and artifacts for the current run
@@ -63,8 +62,13 @@ class LR_Model():
         start_timer(run_name)
  
         best_accuracy = 0
+        tags = {
+            "model_class": "LR",
+            "dataset_name": run_name.split(" - Dataset: ")[-1],
+            }
 
         with mlflow.start_run(run_name=run_name) as run:
+            mlflow.set_tags(tags)
             kfold = StratifiedKFold(K, shuffle=True, random_state=None)
 
             X_kfold = pd.DataFrame(df.iloc[:, :-1].values)
@@ -80,8 +84,6 @@ class LR_Model():
                 row_sensitivity.append(i)
                 row_precision.append(i)
                 row_f1.append(i)
-
-                total, total_specificity, total_sensitivity, total_precision, total_f1 = 0, 0, 0, 0, 0
 
                 for train, test in kfold.split(X_kfold, y_kfold):
                     Xtrain_kfold = X_kfold.iloc[train, :]
@@ -109,22 +111,18 @@ class LR_Model():
                     row_precision.append(precision)
                     row_f1.append(f1_score)
 
-                    total += accuracy
-                    total_specificity += specificity
-                    total_sensitivity += sensitivity
-                    total_precision += precision
-                    total_f1 += f1_score
-
                     if(accuracy > best_accuracy):
                         best_accuracy = accuracy
                         self.clf = model_new
 
-                row.append(total/K)
-                row_specificity.append(total_specificity/K)
-                row_sensitivity.append(total_sensitivity/K)
-                row_precision.append(total_precision/K)
-                row_f1.append(total_f1/K)
+                # Add average across K folds for run i
+                row.append(np.nanmean(row[1:]))
+                row_specificity.append(np.nanmean(row_specificity[1:]))
+                row_sensitivity.append(np.nanmean(row_sensitivity[1:]))
+                row_precision.append(np.nanmean(row_precision[1:]))
+                row_f1.append(np.nanmean(row_f1[1:]))
 
+                # collate metrics for run No i
                 k_accuracy_list.append(row)
                 k_specificity.append(row_specificity)
                 k_sensitivity.append(row_sensitivity)
@@ -140,6 +138,7 @@ class LR_Model():
             avg_sensitivity = np.nanmean(np.array(k_sensitivity)[:, -1])
             avg_precision = np.nanmean(np.array(k_precision)[:, -1])
             avg_f1_score = np.nanmean(np.array(k_f1)[:, -1])
+            
             # log metrics
             mlflow.log_metric("accuracy", avg_accuracy)
             mlflow.log_metric("specificity", avg_specificity)

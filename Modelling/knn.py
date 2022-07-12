@@ -3,11 +3,10 @@ import sys
 import numpy as np
 import pandas as pd
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.model_selection import KFold, StratifiedKFold, GridSearchCV
+from sklearn.model_selection import StratifiedKFold, GridSearchCV
 from sklearn.metrics import confusion_matrix
-from sklearn.preprocessing import MinMaxScaler, StandardScaler
+from sklearn.preprocessing import MinMaxScaler
 import mlflow
-import logging
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.dirname(SCRIPT_DIR))
@@ -104,7 +103,7 @@ class KNN_Model():
         end_timer_and_print(event_name)
         ######## End Hyperparameter tuning for Classifier ####################
 
-    def mlflow_run(self, df, K=6, run_name=f"KNN Experiment", verbose=True):
+    def mlflow_run(self, df, K=5, run_name=f"KNN Experiment", verbose=True):
         """
         This method trains, computes metrics, and logs all metrics, parameters,
         and artifacts for the current run
@@ -117,8 +116,13 @@ class KNN_Model():
         self.tune_hyperparameters(df, run_name)
 
         best_accuracy = 0
+        tags = {
+            "model_class": "LR",
+            "dataset_name": run_name.split(" - Dataset: ")[-1],
+            }
 
         with mlflow.start_run(run_name=run_name) as run:
+            mlflow.set_tags(tags)
             kfold = StratifiedKFold(K, shuffle=True, random_state=None)
 
             X_kfold = pd.DataFrame(df.iloc[:, :-1].values)
@@ -142,8 +146,6 @@ class KNN_Model():
                 row_sensitivity.append(i)
                 row_precision.append(i)
                 row_f1.append(i)
-
-                total, total_specificity, total_sensitivity, total_precision, total_f1 = 0, 0, 0, 0, 0
 
                 for train, test in kfold.split(X_kfold, y_kfold):
                     Xtrain_kfold = X_kfold.iloc[train, :]
@@ -178,22 +180,18 @@ class KNN_Model():
                     row_precision.append(precision)
                     row_f1.append(f1_score)
 
-                    total += accuracy
-                    total_specificity += specificity
-                    total_sensitivity += sensitivity
-                    total_precision += precision
-                    total_f1 += f1_score
-
                     if(accuracy > best_accuracy):
                         best_accuracy = accuracy
                         self.clf = model_new
 
-                row.append(total/K)
-                row_specificity.append(total_specificity/K)
-                row_sensitivity.append(total_sensitivity/K)
-                row_precision.append(total_precision/K)
-                row_f1.append(total_f1/K)
+                # Add average across K folds for run i
+                row.append(np.nanmean(row[1:]))
+                row_specificity.append(np.nanmean(row_specificity[1:]))
+                row_sensitivity.append(np.nanmean(row_sensitivity[1:]))
+                row_precision.append(np.nanmean(row_precision[1:]))
+                row_f1.append(np.nanmean(row_f1[1:]))
 
+                # collate metrics for run No i
                 k_accuracy_list.append(row)
                 k_specificity.append(row_specificity)
                 k_sensitivity.append(row_sensitivity)

@@ -1,5 +1,6 @@
 import os
 import sys
+import mlflow
 from collections import namedtuple
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -14,7 +15,8 @@ from Modelling.TabNet import TabNet_Model  # noqa
 from datasets import datasets # noqa
 
 
-def run_experiments(dataset_names_to_run = []):
+def run_experiments(experiment_name, dataset_names_to_run = []):
+    mlflow.set_experiment(experiment_name)
     model_with_name = namedtuple("model_with_name", ["model_name", "model"])
 
     dataset_info_objects = datasets
@@ -26,11 +28,11 @@ def run_experiments(dataset_names_to_run = []):
     for dataset_info in dataset_info_objects:
         dataset_name = dataset_info.name
         model_instances = [
-            # model_with_name._make(["lightGBM", lightGBM_Model()]),
-            # model_with_name._make(["KNN", KNN_Model()]),
             # model_with_name._make(["LR", LR_Model()]),
             # model_with_name._make(["RF", RF_Model()]),
+            # model_with_name._make(["KNN", KNN_Model()]),
             # model_with_name._make(["SVM", SVM_Model()]),
+            # model_with_name._make(["lightGBM", lightGBM_Model()]),
             model_with_name._make(["TabNet", TabNet_Model()]),
         ]
         df = Utils.load_data(dataset_name)
